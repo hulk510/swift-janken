@@ -18,8 +18,18 @@ struct ContentView: View {
     var body: some View {
         // resizableとかaspectRatioはモディファイアModifierっていうやつら
         VStack {
+            // せめてenumとかで持つべき
+            if answerNumber != 0 {
+                Button(action: {
+                    answerNumber = 0
+                }) {
+                    Text("戻る")
+                        
+                }
+            }
+            Spacer()
             if answerNumber==0 {     // init
-                Text("順番に手が出るよ")
+                Text("順番に手が出るよ").padding(.bottom)
                 
             } else if answerNumber == 1 {// gu
                 Image("gu")
@@ -27,28 +37,44 @@ struct ContentView: View {
                     .resizable()
                 // 画面内に収まるようにアスペクト比（縦横比）を維持する設定
                     .aspectRatio(contentMode: .fit)
-                Text("グー")
+                Spacer()
+                Text("グー").padding(.bottom)
                 
             } else if answerNumber == 2 {// choki
                 Image("choki")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                Text("ちょき！")
+                Spacer()
+                Text("ちょき！").padding(.bottom)
                 
             } else {// pa
                 Image("pa")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                Text("パー")
+                Spacer()
+                Text("パー").padding(.bottom)
             }
-
+            
             Button(action: {
-                answerNumber += 1
-                if answerNumber > 3 {
-                    answerNumber = 0
-                }
+                var newAnswerNumber = 0
+                // repeatとwhile 条件どっちも繰り返しはある。
+                // repeatは最低一回、whileは条件に合わなければ1回もないって感じ
+                // 後に判定するのか前で判定するのかって感じっぽい。
+                repeat {
+                    newAnswerNumber = Int.random(in: 1...3)
+                    // このwhileで同じときずっとやから前回の結果と同じならrepeatか
+                    
+                } while answerNumber == newAnswerNumber
+                answerNumber = newAnswerNumber
             }) {
                 Text("じゃんけんをする")
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 100)
+                    .font(.title)
+                    .background(Color.purple)
+                    .foregroundColor(Color.white)
+                
+                
             }
         }
     }
